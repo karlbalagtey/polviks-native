@@ -1,12 +1,33 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import axios from 'axios';
+import ProductDetail from './ProductDetail';
 
-const ProductList = () => {
-	return (
-		<View>
-			<Text>ProductList</Text>
-		</View>
-	);
-};
+class ProductList extends Component {
+	state = { products: [] };		
+
+	componentWillMount() {
+		axios.get('https://core.polviks.com/api/products')
+			.then(response => this.setState({ products: response.data }));
+	}
+
+	renderProducts() {
+		const products = this.state.products.data;
+
+		if (products) {
+			return products.map(product => 
+				<ProductDetail key={product.identifier} product={product} />
+			);			
+		}
+	}
+
+	render() {
+		return (
+			<View>
+				{this.renderProducts()}
+			</View>
+		);
+	}
+}
 
 export default ProductList;
