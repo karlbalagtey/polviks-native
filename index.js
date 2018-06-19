@@ -1,12 +1,17 @@
 // Import libraries
 import React from 'react';
-import { AppRegistry } from 'react-native';
+import { View, AppRegistry } from 'react-native';
 
-import Header from './src/components/header';
+// Components
+import Header from './src/components/Header';
+import ProductList from './src/components/ProductList';
 
 // Create component
 const App = () => (
-	<Header headerText={'Services'} />
+	<View>
+		<Header headerText={'Services'} />
+		<ProductList />
+	</View>
 );
 
 AppRegistry.registerComponent('polviks', () => App);
