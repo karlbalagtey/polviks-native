@@ -15,16 +15,12 @@ const styles = {
 		borderColor: '#ddd',
 		borderBottomWidth: 0,
 		shadowColor: '#000',
-		shadowOffset: { 
-			width: 0, 
-			height: 1 
-		},
+		shadowOffset: { width: 0, height: 1 },
 		shadowOpacity: 0.2,
 		elevation: 1,
 		marginLeft: 5,
 		marginRight: 5,
-		marginTop: 10,
-		padding: 5
+		marginTop: 10
 	}
 };
 
