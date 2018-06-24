@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
+import Lightbox from 'react-native-lightbox';
 
 import { Card, CardSection, Button } from './common';
 

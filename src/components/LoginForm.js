@@ -1,58 +1,39 @@
 import React, { Component } from 'react';
-import { Text } from 'react-native';
-import axios from 'axios';
-import SInfo from 'react-native-sensitive-info';
+import { Text, View } from 'react-native';
+import { connect } from 'react-redux';
+import { emailChanged, passwordChanged, loginUser } from '../actions';
 import { Button, Card, CardSection, Input, Spinner } from './common';
-import apiConfig from './services/api/config';
 
 class LoginForm extends Component {
-    state = { email: '', password: '', error: '', loading: false, };
+
+    onEmailChanged(text) {
+        this.props.emailChanged(text);
+    }
+
+    onPasswordChanged(text) {
+        this.props.passwordChanged(text);
+    }
 
     onButtonPress() {
-        const { email, password } = this.state;
+        const { email, password } = this.props;
 
-        this.setState({ error: '', loading: true });
-
-        axios.post(apiConfig.tokenUrl, {
-            username: email, 
-            password: password,
-            grant_type: 'password',
-            client_id: apiConfig.clientId,
-            client_secret: apiConfig.clientSecret,
-            provider: 'customers'
-        })
-        .then(response => this.onLoginSuccess(response))
-        .catch(error => this.onLoginFail(error));
+        this.props.loginUser({ email, password });
     }
 
-    onLoginFail(error) {
-        this.setState({
-            error: error.response.data.message,
-            loading: false
-        });
-    }
-
-    onLoginSuccess(response) {
-        const accessToken = response.data.access_token;
-
-        SInfo.setItem('accessToken', accessToken, {
-            sharedPreferencesName: 'mySharedPrefs',
-            keychainService: 'myKeychain'
-        });
-
-        SInfo.setItem('authenticated', 'true', {});
-
-        this.setState({
-            email: '',
-            password: '',
-            loading: false,
-            error: '',
-            accessToken: ''
-        });
+    renderError() {
+        if (this.props.error) {
+            return (
+                <View style={{ backgroundColor: 'white' }}>
+                    <Text style={styles.errorTextStyle}>
+                        {this.props.error}
+                    </Text>
+                </View>
+            );
+        }
     }
 
     renderButton() {
-        if (this.state.loading) {
+        if (this.props.loading) {
             return <Spinner size="small" />;
         }
 
@@ -70,8 +51,8 @@ class LoginForm extends Component {
                     <Input 
                         placeholder="example@polviks.com"
                         label="Email:"
-                        value={this.state.email}
-                        onChangeText={text => this.setState({ email: text })}
+                        value={this.props.email}
+                        onChangeText={this.onEmailChanged.bind(this)}
                     />
                 </CardSection>
 
@@ -80,14 +61,12 @@ class LoginForm extends Component {
                         secureText
                         placeholder="**********"
                         label="Password:"
-                        value={this.state.password}
-                        onChangeText={password => this.setState({ password })}
+                        value={this.props.password}
+                        onChangeText={this.onPasswordChanged.bind(this)}
                     />
                 </CardSection>
 
-                <Text style={styles.errorTextStyle}>
-                    {this.state.error}
-                </Text>
+                {this.renderError()}
 
                 <CardSection>
                     {this.renderButton()}
@@ -105,4 +84,12 @@ const styles = {
     }
 };
 
-export default LoginForm;
+const mapStateToProps = ({ auth }) => {
+    const { email, password, error, loading } = auth;
+
+    return { email, password, error, loading };
+};
+
+export default connect(mapStateToProps, { 
+    emailChanged, passwordChanged, loginUser 
+})(LoginForm);

@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import SInfo from 'react-native-sensitive-info';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 
 // Components
 import { Header, Button, Spinner } from './components/common';
 // import ProductList from './components/ProductList';
 import LoginForm from './components/LoginForm';
+import Router from './router';
 
-const store = createStore(reducers);
+const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
 
 class App extends Component {
 	state = { loggedIn: null };
@@ -41,7 +43,7 @@ class App extends Component {
 					</Button>
 				);
 			case false:
-				return <LoginForm />;
+				return <Router />;
 			case null:
 				return <Spinner size="large" />;
 		}
@@ -51,7 +53,6 @@ class App extends Component {
 		return (
 			<Provider store={store}>
 				<View style={{ flex: 1 }}>
-					<Header headerText={'Polviks'} />
 					{this.renderContent()}
 				</View>
 			</Provider>

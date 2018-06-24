@@ -18,9 +18,8 @@ const styles = {
 		alignItems: 'center',
 		height: 60,
 		paddingTop: 15,
-		shadowColor: '#000',
-		shadowOffset: { width: 0, height: 1 },
-		shadowOpacity: 0.1,
+		borderBottomWidth: 1,
+		borderBottomColor: '#999',
 		elevation: 2,
 		position: 'relative'
 	},
